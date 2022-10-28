@@ -5,36 +5,36 @@ import fs from "fs"
 import { v4 as uuid } from "uuid"
 
 import ProductModelInterface from "../../interfaces/ProductModelInterface.js"
+import { upsertImport } from "../../repositories/products.repositorires.js"
 
+//TODO: Treat exceptions
 export async function importFileNamesFromCoodesh(){
 	console.time("request")
-	const filesNamesInText: AxiosResponse<string> = await axios.get("https://challenges.coode.sh/food/data/json/index.txt")
+	console.log("Import running..")
+	
+	const filesNamesInText: AxiosResponse<string> = await axios.get(`${process.env.COODESH_URL}index.txt`)
 	const filesNamesInArray = filesNamesInText.data.split("\n")
 	const filesNames = filesNamesInArray.filter(fileName => fileName.endsWith(".gz"));
 
-	const arr = [];
+	//const arr = [];
 	
 	for(const zipFileName of filesNames){
-		console.log(zipFileName)
-		const productObject = await importDataFromCoodesh(zipFileName);
-		arr.push(...productObject);
-		console.log("Done !")
-
+		await importDataFromCoodesh(zipFileName);
+		//arr.push(...productObject);
+		
 	}
-	console.log(arr.length)
+	//console.log(arr.length)
+	console.log("Done !")
 	console.timeEnd("request")
 }
 
 export async function importDataFromCoodesh(zipFileName: string){
-	const food = await axios.get(`https://challenges.coode.sh/food/data/json/${zipFileName}`, {
+	const food = await axios.get(`${process.env.COODESH_URL}${zipFileName}`, {
 		responseType: "arraybuffer"
 	})
 	const newFileRandomName = uuid().split("-")[0];
-	console.log("Unzipping file...")
 	const unzippedBuffer = await unzipBuffer(food.data);
-	console.log(`Creating file named ${newFileRandomName}...`)
 	await createFileInSystem(`temp/${newFileRandomName}.txt`, unzippedBuffer);
-	console.log("Reading file...")
 	return await readFileAndReturn100Objects(`temp/${newFileRandomName}.txt`)
 }
 	
@@ -44,7 +44,6 @@ async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 		unzip(buffer, async (err, unzippedBuffer) => {
 			if (err) {
 				console.error('An error occurred:', err);
-				process.exitCode = 1;
 			}
 			resolve(unzippedBuffer);
 		});
@@ -66,11 +65,11 @@ async function readFileAndReturn100Objects(fileName: string) : Promise<ProductMo
 	return new Promise((resolve, reject) => {
 		fs.createReadStream(fileName)
 		.pipe(ndjson.parse())
-		.on("data", (obj) => {
+		.on("data", async (obj) => {
 			contador ++
 			if(contador <= 100) {
 			const newObj = createProductObjectFromFile(obj);
-			hundredJSON.push(newObj)
+			await upsertImport(newObj);
 		}	
 		})
 		.on("error", (err) => console.error('An error occurred reading file:', err))

@@ -1,20 +1,20 @@
 import express from "express" 
-import axios from "axios"
-import {unzip} from "node:zlib"
-import ndjson from "ndjson"
-import fs from "fs"
 import router from "./routers/routers.js"
-import { importFileNamesFromCoodesh } from "./services/import/import.js"
+import dotenv from "dotenv"
+import cors from "cors"
+import "express-async-errors"
+import cron from "node-cron"
+dotenv.config();
 
 
 const app = express();
+app.use(cors())
+app.use(express.json());
+
 app.use(router);
 
-app.get('/test',async (req, res) => {
-	await importFileNamesFromCoodesh()
-	res.sendStatus(200);
-})
-	
-
+cron.schedule('* * * * *', () => {
+	console.log('running a task every minute');
+});
 
 export default app;
