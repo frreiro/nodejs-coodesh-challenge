@@ -3,7 +3,8 @@ import router from "./routers/routers.js"
 import dotenv from "dotenv"
 import cors from "cors"
 import "express-async-errors"
-import cron from "node-cron"
+import "./utils/cron.js"
+import "./utils/time.js"
 dotenv.config();
 
 
@@ -13,8 +14,5 @@ app.use(express.json());
 
 app.use(router);
 
-cron.schedule('* * * * *', () => {
-	console.log('running a task every minute');
-});
 
 export default app;

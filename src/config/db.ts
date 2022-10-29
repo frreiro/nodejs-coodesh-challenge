@@ -9,7 +9,8 @@ let db: Db = null;
 
 try {
 	await mongoClient.connect();
-	db = mongoClient.db("challenge_db");
+	db = mongoClient.db("coodesh_db");
+	console.log(await db.stats())
 } catch (e) {
 	console.error("Could no connect to the database")
 }

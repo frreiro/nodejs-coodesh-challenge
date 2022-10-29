@@ -1,6 +1,6 @@
 type Status = "published" | "draft" | "trash";
 
-export default interface ProductModelInterface {
+export interface ProductModelInterface {
 	code: number,
 	status: Status,
 	imported_t: Date,
@@ -19,9 +19,9 @@ export default interface ProductModelInterface {
 	ingredients_text: string,
 	traces: string,
 	serving_size: string,
-	serving_quantity: string,
+	serving_quantity: number,
 	nutriscore_score: number,
-	nutriscore_grade: number,
+	nutriscore_grade: string,
 	main_category:string,
 	image_url:string
 }
