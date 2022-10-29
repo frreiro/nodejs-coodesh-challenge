@@ -1,4 +1,4 @@
-import db from "../config/db.js"
+import {db} from "../config/db.js"
 import {ProductModelInterface} from "../interfaces/ProductModelInterface.js"
 
 
@@ -12,7 +12,7 @@ export async function insertProduct(product: ProductModelInterface): Promise<voi
 }
 
 export async function updateProduct(product: ProductModelInterface): Promise<void>{
-	const {code, last_modified_t, status, ... productUpdated} = product;
+	const {code, status, ... productUpdated} = product;
 	await db.collection('products').updateOne(
 		{code: product.code},
 		{$set:{...productUpdated}} 

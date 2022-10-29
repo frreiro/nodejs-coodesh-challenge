@@ -7,12 +7,16 @@ const mongoClient = new MongoClient(process.env.MONGO_URL);
 
 let db: Db = null;
 
+
+let isConnect = false;
+
 try {
 	await mongoClient.connect();
 	db = mongoClient.db("coodesh_db");
-	console.log(await db.stats())
+	isConnect = true;
 } catch (e) {
+	 isConnect = false;
 	console.error("Could no connect to the database")
 }
 
-export default db;
+export {db, isConnect};

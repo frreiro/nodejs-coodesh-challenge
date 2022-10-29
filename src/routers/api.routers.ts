@@ -8,7 +8,6 @@ const apiRouter = Router();
 apiRouter.get('/', apiDetails)
 
 apiRouter.get('/health',async (req, res) => {
-	console.log(process.cpuUsage())
 	res.sendStatus(200);
 })
 
