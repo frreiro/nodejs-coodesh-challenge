@@ -10,6 +10,7 @@ let db: Db = null;
 
 let isConnect = false;
 
+//TODO: Send error to user when not connect
 try {
 	await mongoClient.connect();
 	db = mongoClient.db("coodesh_db");

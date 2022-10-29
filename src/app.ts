@@ -3,7 +3,7 @@ import router from "./routers/routers.js"
 import dotenv from "dotenv"
 import cors from "cors"
 import "express-async-errors"
-import "./utils/cron.js"
+//import "./utils/cron.js"
 import "./utils/time.js"
 dotenv.config();
 

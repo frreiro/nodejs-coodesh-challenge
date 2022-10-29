@@ -9,3 +9,10 @@ export async function searchForProductAndInsertOrUpdate(product: ProductModelInt
 		await productRepository.updateProduct(product);
 	}
 }
+
+//TODO: Treat exceptions 
+export async function findProductByCode(code: number){
+	const product =  await productRepository.findProductByCode(code);
+	if(!product) console.error("Produc do not exist")
+	return product
+}
