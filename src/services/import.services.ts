@@ -6,8 +6,8 @@ import { v4 as uuid } from "uuid"
 
 import {ProductModelInterface} from "../interfaces/ProductModelInterface.js"
 import { searchForProductAndInsertOrUpdate } from "./products.services.js"
+import AppError from "../utils/appError.js"
 
-//TODO: Treat exceptions
 export async function importFileNamesFromCoodesh(){
 	console.time("request")
 	console.log("Import running..")
@@ -45,7 +45,7 @@ async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 	return new Promise((resolve, reject) => {
 		unzip(buffer, async (err, unzippedBuffer) => {
 			if (err) {
-				console.error('An error occurred:', err);
+				throw new AppError("An error occurred while unzip file", 500);
 			}
 			resolve(unzippedBuffer);
 		});
@@ -57,7 +57,7 @@ async function createFileInSystem(newFileName : string, buffer: Buffer):Promise<
 		await fs.promises.writeFile(newFileName, buffer);
 		console.log("file created");	
 	} catch (err) {
-		console.error('An error occurred creating file:', err);
+		throw new AppError("An error occurred while creating file", 500);
 	}
 }
 
@@ -75,16 +75,16 @@ async function readFileAndReturn100Objects(fileName: string) : Promise<ProductMo
 			}
 			contador ++
 		})
-		.on("error", (err) => console.error('An error occurred reading file:', err))
+		.on("error", (err) => {
+			throw new AppError("An error occurred while reading file", 500)
+		})
 		.on("end", async () => {
 			await deleteFile(fileName)
-			console.log(productArray.length)
 			resolve(productArray)
 
 		})
 		.on("close", async () => {
 			await deleteFile(fileName)
-			console.log(productArray.length)
 			resolve(productArray)
 		})
 	})
@@ -97,7 +97,7 @@ async function deleteFile(fileName: string){
 		console.log("file deleted")
 		
 	} catch (err) {
-		console.error('An error occurred deleting file:', err);
+		throw new AppError("An error occurred while deleting file", 500);
 	}
 }
 

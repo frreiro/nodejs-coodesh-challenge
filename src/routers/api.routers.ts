@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { apiDetails } from "../controllers/api.controllers.js";
+import AppError from "../utils/appError.js";
 
 const apiRouter = Router();
 
