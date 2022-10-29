@@ -1,4 +1,4 @@
-type Status = "published" | "draft" | "trash";
+export type Status = "published" | "draft" | "trash";
 
 export interface ProductModelInterface {
 	code: number,

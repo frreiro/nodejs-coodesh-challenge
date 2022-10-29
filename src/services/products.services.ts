@@ -4,6 +4,7 @@ import AppError from "../utils/appError.js";
 
 export async function searchForProductAndInsertOrUpdate(product: ProductModelInterface){
 	const dbProduct = await productRepository.findProductByCode(product.code);
+
 	if(!dbProduct){
 		await productRepository.insertProduct(product);
 	} else {
@@ -14,5 +15,29 @@ export async function searchForProductAndInsertOrUpdate(product: ProductModelInt
 export async function findProductByCode(code: number){
 	const product =  await productRepository.findProductByCode(code);
 	if(!product) throw new AppError('Product not found', 404);
+	if(product.status === "trash") throw new AppError('Product was deleted', 404);
 	return product
 }
+
+export async function findProductAndDelete(code: number){
+	const product =  await productRepository.findProductByCode(code);
+	if(!product) throw new AppError('Product not found', 404);
+	if(product.status === "trash") throw new AppError('Product already was deleted', 404);
+	await productRepository.deleteProduct(code);
+}
+
+
+export async function find50Products(page: number){
+	const LIMIT = 50;
+	const product = await productRepository.findProductsPerPage(page, LIMIT);
+	return product
+}
+
+
+//export async function changeProductAndDelete(code: number){
+//	const product =  await productRepository.findProductByCode(code);
+//	if(!product) throw new AppError('Product not found', 404);
+//	if(product.status === "trash") throw new AppError('Product was deleted', 404);
+//	if(product.status === "published") 
+//	await productRepository.deleteProduct(code);
+//}

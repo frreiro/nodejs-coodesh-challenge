@@ -1,14 +1,11 @@
 import { Router } from "express";
-import { findProduct } from "../controllers/products.controllers.js";
+import {  deleteProduct, findAllProducts, findProduct } from "../controllers/products.controllers.js";
 
 const productRouter = Router();
 
 productRouter.get('/products/:code', findProduct)
-productRouter.get('/products/', )
-productRouter.put('/products/:code')
-productRouter.delete('/products/:code')
-
-
-
+productRouter.get('/products', findAllProducts)
+productRouter.put('/products/:code', )
+productRouter.delete('/products/:code', deleteProduct)
 
 export default productRouter
