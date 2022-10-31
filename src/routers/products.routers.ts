@@ -3,9 +3,10 @@ import {  deleteProduct, findAllProducts, findProduct } from "../controllers/pro
 
 const productRouter = Router();
 
+//TODO: verificar o que pode ser atualizado com o PUT
 productRouter.get('/products/:code', findProduct)
 productRouter.get('/products', findAllProducts)
-productRouter.put('/products/:code', )
 productRouter.delete('/products/:code', deleteProduct)
+productRouter.put('/products/:code', )
 
 export default productRouter

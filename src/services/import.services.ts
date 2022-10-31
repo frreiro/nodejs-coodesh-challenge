@@ -36,12 +36,12 @@ export async function importDataFromCoodesh(zipFileName: string){
 	})
 	const newFileRandomName = uuid().split("-")[0];
 	const unzippedBuffer = await unzipBuffer(food.data);
-	await createFileInSystem(`temp/${newFileRandomName}.txt`, unzippedBuffer);
-	return await readFileAndReturn100Objects(`temp/${newFileRandomName}.txt`)
+	await createFileInSystem(newFileRandomName, unzippedBuffer);
+	return await readFileAndReturn100Objects(newFileRandomName)
 }
 	
 	
-async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
+export async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 	return new Promise((resolve, reject) => {
 		unzip(buffer, async (err, unzippedBuffer) => {
 			if (err) {
@@ -52,20 +52,21 @@ async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 	})
 }
 
-async function createFileInSystem(newFileName : string, buffer: Buffer):Promise<void> {
+export async function createFileInSystem(newFileName : string, buffer: Buffer | Buffer[]):Promise<void> {
 	try {
-		await fs.promises.writeFile(newFileName, buffer);
+		await fs.promises.writeFile(`temp/${newFileName}.txt`, buffer);
 		console.log("file created");	
 	} catch (err) {
 		throw new AppError("An error occurred while creating file", 500);
 	}
 }
 
-async function readFileAndReturn100Objects(fileName: string) : Promise<ProductModelInterface[]>{
+export async function readFileAndReturn100Objects(fileName: string) : Promise<ProductModelInterface[]>{
 	return new Promise((resolve, reject) => {
+		console.log("Reading file...")
 		let contador = 0
 		const productArray: ProductModelInterface[] = [];
-		const readStream = fs.createReadStream(fileName)
+		const readStream = fs.createReadStream(`temp/${fileName}.txt`)
 		.pipe(ndjson.parse())
 		.on("data", async (obj) => {
 			if(contador >= 100) readStream.destroy(); 
@@ -91,9 +92,9 @@ async function readFileAndReturn100Objects(fileName: string) : Promise<ProductMo
 }
 
 
-async function deleteFile(fileName: string){
+export async function deleteFile(fileName: string){
 	try {
-		fs.promises.unlink(fileName)
+		fs.promises.unlink(`temp/${fileName}.txt`)
 		console.log("file deleted")
 		
 	} catch (err) {

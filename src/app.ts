@@ -2,11 +2,11 @@ import express from "express"
 import router from "./routers/routers.js"
 import dotenv from "dotenv"
 import cors from "cors"
-	import "express-async-errors"
+import "express-async-errors"
 
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js"
 
-//import "./utils/cron.js"
+import "./utils/cron.js"
 import "./utils/time.js"
 
 dotenv.config();

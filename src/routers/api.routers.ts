@@ -1,12 +1,12 @@
 import { Router } from "express";
 import { apiDetails } from "../controllers/api.controllers.js";
-import AppError from "../utils/appError.js";
+import { importFileNamesFromCoodesh } from "../services/import.services.js";
 
 const apiRouter = Router();
 
 apiRouter.get('/', apiDetails)
 
-apiRouter.get('/health', (req, res) => {
+apiRouter.get('/health', async (req, res) => {
 	res.sendStatus(200);
 })
 

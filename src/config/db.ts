@@ -11,13 +11,15 @@ let db: Db = null;
 
 let isConnect = false;
 
-try {
-	await mongoClient.connect();
-	db = mongoClient.db("coodesh_db");
-	isConnect = true;
-} catch (e) {
-	 isConnect = false;
-	 throw new AppError("Could no connect to the database", 400)
-}
+(async () => {
+	try {
+		await mongoClient.connect();
+		db = mongoClient.db("coodesh_db");
+		isConnect = true;
+	} catch (e) {
+		 isConnect = false;
+		 throw new AppError("Could no connect to the database", 400)
+		}
+})()
 
 export {db, isConnect};
