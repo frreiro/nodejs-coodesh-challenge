@@ -8,7 +8,8 @@
     "build": "tsc",
 	"start": "node dist/server.js",
     "start:dev": "nodemon src/server.ts",
-    "test:dev": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests --forceExit"
+    "test:dev": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests --forceExit",
+	"start:seed":"ts-node src/config/seed.ts"
   },
   "keywords": [],
   "author": "Lucas Viana",
