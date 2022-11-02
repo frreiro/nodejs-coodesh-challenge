@@ -7,7 +7,7 @@
   "scripts": {
     "build": "tsc",
     "start:dev": "nodemon src/server.ts",
-    "test:dev": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests"
+    "test:dev": "NODE_ENV=test NODE_OPTIONS=--experimental-vm-modules jest --passWithNoTests --forceExit"
   },
   "keywords": [],
   "author": "Lucas Viana",

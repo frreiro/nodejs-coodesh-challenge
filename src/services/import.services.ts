@@ -6,10 +6,10 @@ import { v4 as uuid } from "uuid"
 
 import {ProductModelInterface} from "../interfaces/ProductModelInterface.js"
 import { searchForProductAndInsertOrUpdate } from "./products.services.js"
-import * as productRepository from "../repositories/products.repositorires.js"
+import  {productRepository} from "../repositories/products.repositorires.js"
 import AppError from "../utils/appError.js"
 
-export async function importFileNamesFromCoodesh(){
+async function importFileNamesFromCoodesh(){
 	console.time("request")
 	console.log("Import running..")
 	
@@ -31,7 +31,7 @@ export async function importFileNamesFromCoodesh(){
 	console.timeEnd("request")
 }
 
-export async function importDataFromCoodesh(zipFileName: string){
+ async function importDataFromCoodesh(zipFileName: string){
 	const food = await axios.get(`${process.env.COODESH_URL}${zipFileName}`, {
 		responseType: "arraybuffer"
 	})
@@ -42,7 +42,7 @@ export async function importDataFromCoodesh(zipFileName: string){
 }
 	
 	
-export async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
+ async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 	return new Promise((resolve, reject) => {
 		unzip(buffer, async (err, unzippedBuffer) => {
 			if (err) {
@@ -53,7 +53,7 @@ export async function unzipBuffer(buffer: Buffer): Promise<Buffer>{
 	})
 }
 
-export async function createFileInSystem(newFileName : string, buffer: Buffer | Buffer[]):Promise<void> {
+ async function createFileInSystem(newFileName : string, buffer: Buffer | Buffer[]):Promise<void> {
 	try {
 		await fs.promises.writeFile(`temp/${newFileName}.txt`, buffer);
 		console.log("file created");	
@@ -62,7 +62,7 @@ export async function createFileInSystem(newFileName : string, buffer: Buffer | 
 	}
 }
 
-export async function readFileAndReturn100Objects(fileName: string) : Promise<ProductModelInterface[]>{
+ async function readFileAndReturn100Objects(fileName: string) : Promise<ProductModelInterface[]>{
 	return new Promise((resolve, reject) => {
 		console.log("Reading file...")
 		let contador = 0
@@ -89,14 +89,11 @@ export async function readFileAndReturn100Objects(fileName: string) : Promise<Pr
 		.on("end", async () => {
 			await deleteFile(fileName)
 			const filterList = removeEditedProduct(editedProductArray, productArray)
-			console.log(editedProductArray)
 			resolve(filterList)
 			
 		})
 		.on("close", async () => {
 			await deleteFile(fileName)
-			console.log(editedProductArray.length, productArray.length)
-			console.log(editedProductArray)
 			const filterList = removeEditedProduct(editedProductArray, productArray)
 			resolve(filterList)
 		})
@@ -109,7 +106,7 @@ function removeEditedProduct(editedProducts: number[], products: ProductModelInt
 }
 
 
-export async function deleteFile(fileName: string){
+ async function deleteFile(fileName: string){
 	try {
 		fs.promises.unlink(`temp/${fileName}.txt`)
 		console.log("file deleted")
@@ -145,4 +142,14 @@ function createProductObjectFromFile(obj): ProductModelInterface{
 		main_category: obj.main_category,
 		image_url: obj.image_url
 	}
+}
+
+export const importServices = {
+	importDataFromCoodesh,
+	unzipBuffer,
+	createFileInSystem,
+	readFileAndReturn100Objects,
+	removeEditedProduct,
+	deleteFile,
+	importFileNamesFromCoodesh
 }

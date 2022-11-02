@@ -1,5 +1,6 @@
 import {faker} from "@faker-js/faker"
 import {gzipSync} from "node:zlib"
+import fs from "fs"
 
 export function createJsonWith100Lines() {
 	const productArray = [];
@@ -17,6 +18,12 @@ export function createZippedBuffer(jsonBuffer: Buffer){
 	return gzipSync(jsonBuffer);
 }
 
+
+export async function createFileAndFillWith100Products(fileName) {
+	const jsonArray = createJsonWith100Lines()
+	const bufferArr = jsonArray.map((json) => createBufferFromInput(json))
+	await fs.promises.writeFile(`temp/${fileName}.txt`, bufferArr);
+}
 
 function createProductObj() {
 	const randomPastDate = faker.date.past().getTime() 

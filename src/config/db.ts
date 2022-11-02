@@ -22,4 +22,4 @@ let isConnect = false;
 		}
 })()
 
-export {db, isConnect};
+export {db, isConnect, mongoClient};

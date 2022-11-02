@@ -1,5 +1,5 @@
 import { ProductModelInterface } from "../interfaces/ProductModelInterface.js";
-import * as productRepository from "../repositories/products.repositorires.js"
+import {productRepository} from "../repositories/products.repositorires.js"
 import AppError from "../utils/appError.js";
 
 export async function searchForProductAndInsertOrUpdate(product: ProductModelInterface){
