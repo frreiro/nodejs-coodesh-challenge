@@ -6,6 +6,7 @@ import { v4 as uuid } from "uuid"
 
 import {ProductModelInterface} from "../interfaces/ProductModelInterface.js"
 import { searchForProductAndInsertOrUpdate } from "./products.services.js"
+import * as productRepository from "../repositories/products.repositorires.js"
 import AppError from "../utils/appError.js"
 
 export async function importFileNamesFromCoodesh(){
@@ -66,29 +67,45 @@ export async function readFileAndReturn100Objects(fileName: string) : Promise<Pr
 		console.log("Reading file...")
 		let contador = 0
 		const productArray: ProductModelInterface[] = [];
+		const editedProductArray: number[] = [];
 		const readStream = fs.createReadStream(`temp/${fileName}.txt`)
 		.pipe(ndjson.parse())
 		.on("data", async (obj) => {
-			if(contador >= 100) readStream.destroy(); 
-			else {
-				const newObj = createProductObjectFromFile(obj);
-				productArray.push(newObj)
+			
+			const newObj = createProductObjectFromFile(obj);
+			const dbProduct = await productRepository.findProductByCode(newObj.code);
+			
+			if(dbProduct && dbProduct.status === "draft"){
+				editedProductArray.push(dbProduct.code)
 			}
+			
+			productArray.push(newObj)
 			contador ++
+			if(contador >= 100) readStream.destroy(); 
 		})
 		.on("error", (err) => {
 			throw new AppError("An error occurred while reading file", 500)
 		})
 		.on("end", async () => {
 			await deleteFile(fileName)
-			resolve(productArray)
-
+			const filterList = removeEditedProduct(editedProductArray, productArray)
+			console.log(editedProductArray)
+			resolve(filterList)
+			
 		})
 		.on("close", async () => {
 			await deleteFile(fileName)
-			resolve(productArray)
+			console.log(editedProductArray.length, productArray.length)
+			console.log(editedProductArray)
+			const filterList = removeEditedProduct(editedProductArray, productArray)
+			resolve(filterList)
 		})
 	})
+}
+
+function removeEditedProduct(editedProducts: number[], products: ProductModelInterface[]){
+	return products.filter(product => !editedProducts.includes(product.code))
+
 }
 
 

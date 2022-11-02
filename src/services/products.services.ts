@@ -8,6 +8,7 @@ export async function searchForProductAndInsertOrUpdate(product: ProductModelInt
 	if(!dbProduct){
 		await productRepository.insertProduct(product);
 	} else {
+		
 		await productRepository.updateProduct(product);
 	}
 }
