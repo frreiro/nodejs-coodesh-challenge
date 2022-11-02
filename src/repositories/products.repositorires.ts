@@ -34,10 +34,10 @@ export async function findProductsPerPage(page: number, limit: number) {
 }
 
 
-//export async function updateProductStatus(code: number, status: Status): Promise<void>{
-//	await db.collection('products').updateOne(
-//		{code: code},
-//		{$set:{status}} 
-//	);	
-//}
+export async function updateProductByClient(code: number, modifications: ProductModelInterface): Promise<void>{
+	await db.collection('products').updateOne(
+		{code: code},
+		{$set:{...modifications, status: "draft"}} 
+	);	
+}
 

@@ -6,7 +6,7 @@ import "express-async-errors"
 
 import errorHandlerMiddleware from "./middlewares/errorHandlerMiddleware.js"
 
-import "./utils/cron.js"
+//import "./utils/cron.js"
 import "./utils/time.js"
 
 dotenv.config();

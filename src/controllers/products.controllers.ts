@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { ProductModelInterface } from "../interfaces/ProductModelInterface.js";
 import * as productServices from "../services/products.services.js"
 import AppError from "../utils/appError.js";
 
@@ -17,12 +18,13 @@ export async function deleteProduct(req: Request, res: Response){
 	res.sendStatus(200);
 }
 
-//export async function changeProductStatus(req: Request, res: Response){
-//	const {code} = req.params;
-//	if(!Number(code)) throw new AppError("Param type not allowed", 422);
-//	//await productServices.findProductAndDelete(parseInt(code))
-//	res.sendStatus(200);
-//}
+export async function clientUpdateProduct(req: Request, res: Response){
+	const {code} = req.params;
+	const body: ProductModelInterface = req.body
+	if(!Number(code)) throw new AppError("Param type not allowed", 422);
+	await productServices.clientChangeProduct(parseInt(code), body)
+	res.sendStatus(200);
+}
 
 
 export async function findAllProducts(req: Request, res: Response){

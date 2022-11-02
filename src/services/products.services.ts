@@ -34,10 +34,8 @@ export async function find50Products(page: number){
 }
 
 
-//export async function changeProductAndDelete(code: number){
-//	const product =  await productRepository.findProductByCode(code);
-//	if(!product) throw new AppError('Product not found', 404);
-//	if(product.status === "trash") throw new AppError('Product was deleted', 404);
-//	if(product.status === "published") 
-//	await productRepository.deleteProduct(code);
-//}
+export async function clientChangeProduct(code: number, modifications: ProductModelInterface){
+	const product =  await productRepository.findProductByCode(code);
+	if(!product) throw new AppError('Product not found', 404);
+	await productRepository.updateProductByClient(code, modifications);
+}
