@@ -5,9 +5,9 @@ import { updateProductSchema } from "../schemas/products.schemas.js";
 
 const productRouter = Router();
 
-productRouter.get('/products/:code', findProduct)
 productRouter.get('/products', findAllProducts)
+productRouter.get('/products/:code', findProduct)
 productRouter.delete('/products/:code', deleteProduct)
-productRouter.put('/products/:code', schemaValidate(updateProductSchema), clientUpdateProduct )
+productRouter.put('/products/:code', schemaValidate(updateProductSchema), clientUpdateProduct)
 
 export default productRouter

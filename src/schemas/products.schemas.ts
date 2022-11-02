@@ -4,9 +4,6 @@ import { ProductModelInterface } from "../interfaces/ProductModelInterface.js"
 
 export const updateProductSchema = joi.object<Omit<ProductModelInterface, "code" | "status" | "imported_t">>({
 	url: joi.string(),
-	creator: joi.string(),
-	created_t: joi.number(),
-	last_modified_t: joi.number(),
 	product_name: joi.string(),
 	quantity: joi.string(),
 	brands: joi.string(),
